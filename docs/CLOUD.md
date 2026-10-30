@@ -237,9 +237,9 @@ uv run --extra agentcore python scripts/verify_agentcore_memory.py
 
 This is a live, chargeable rehearsal with a separate test actor. It uses the real
 model, OMDb, AgentCore Memory, and the sample schedule. It requests tomorrow's
-screenings so the run does not depend on the current hour, switches from theater to
-home, stops the actual Runtime session, selects a film on replacement compute,
-and verifies the saved plan and call counts in DynamoDB. Evidence goes to
+screenings so the run does not depend on the current hour, switches from theater
+to home, waits beyond the Worker’s idle-drain window, and selects a film on a
+different Worker. It verifies the saved plan and call counts in DynamoDB. Evidence goes to
 `.demo-state/nicole/agentcore-smoke.json`. It must not be presented as passing
 unless the final `PASS` and evidence confirm it. No local Worker is started. The claim-check command verifies real listing payload
 references in Event History, hydrates their actual S3 objects, and replays that

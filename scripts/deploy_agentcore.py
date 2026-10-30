@@ -237,11 +237,18 @@ def prepare(region, manifest, save):
                 allow(
                     [
                         "logs:CreateLogGroup",
-                        "logs:CreateLogStream",
-                        "logs:PutLogEvents",
                         "logs:DescribeLogStreams",
+                        "logs:PutResourcePolicy",
                     ],
-                    f"arn:aws:logs:{region}:{account}:log-group:/aws/bedrock-agentcore/runtimes/{RUNTIME}-*:*",
+                    f"arn:aws:logs:{region}:{account}:log-group:/aws/bedrock-agentcore/runtimes/{RUNTIME}-*",
+                ),
+                allow(
+                    ["logs:CreateLogStream", "logs:PutLogEvents"],
+                    f"arn:aws:logs:{region}:{account}:log-group:/aws/bedrock-agentcore/runtimes/{RUNTIME}-*:log-stream:*",
+                ),
+                allow(
+                    ["logs:DescribeLogGroups"],
+                    f"arn:aws:logs:{region}:{account}:log-group:*",
                 ),
             ]
         ),

@@ -1,13 +1,10 @@
-"""Live deployment rehearsal with a separate actor and real Runtime session loss."""
+"""Live rehearsal with a separate actor and replacement after Worker idle drain."""
 
 import asyncio
 import json
 import os
-import re
 from datetime import datetime
 from uuid import uuid4
-
-import boto3
 
 from nicole import store
 from nicole.cli import send_turn
@@ -97,52 +94,12 @@ async def main():
     assert identity.startswith("nicole-agentcore/"), identity
     evidence["first_worker_identity"] = identity
     save()
-    logs = boto3.client("logs", region_name=manifest["region"])
-    groups = await asyncio.to_thread(
-        logs.describe_log_groups,
-        logGroupNamePrefix="/aws/bedrock-agentcore/runtimes/" + manifest["runtime_id"],
-    )
-    assert groups["logGroups"], "No Runtime log group"
-    group = next(
-        g["logGroupName"]
-        for g in groups["logGroups"]
-        if g["logGroupName"].endswith("-" + manifest["endpoint_name"])
-    )
-    session_id = None
-    for _ in range(12):
-        found = await asyncio.to_thread(
-            logs.filter_log_events, logGroupName=group, limit=500
-        )
-        streams = {
-            e["logStreamName"]
-            for e in found.get("events", [])
-            if identity in e["message"]
-        }
-        for event in found.get("events", []):
-            if event["logStreamName"] in streams:
-                match = re.search(
-                    r"Runtime invocation session=([a-zA-Z0-9_-]+)", event["message"]
-                )
-                if match:
-                    session_id = match.group(1)
-        if session_id:
-            break
-        await asyncio.sleep(5)
-    assert session_id, "Runtime session ID has not appeared in CloudWatch"
-    evidence["stopped_runtime_session"] = session_id
+    print("Waiting for Nicole's 60-second idle drain before the next turn…", flush=True)
+    for _ in range(5):
+        await asyncio.sleep(15)
+    evidence["idle_wait_seconds"] = 75
     save()
-    await asyncio.to_thread(
-        boto3.client(
-            "bedrock-agentcore", region_name=manifest["region"]
-        ).stop_runtime_session,
-        agentRuntimeArn=manifest["runtime_arn"],
-        qualifier=manifest["endpoint_name"],
-        runtimeSessionId=session_id,
-    )
-    print(
-        "Stopped the actual AgentCore Runtime session; Workflow remains open",
-        flush=True,
-    )
+    print("Requesting the next turn after the idle-drain window", flush=True)
     state = await send_turn(handle, f"Let's choose {chosen}. Save that for tonight.")
     assert state["saved"] and state["selected"]["title"] == chosen
     saved = await asyncio.to_thread(store.saved_pick, workflow_id, actor)
