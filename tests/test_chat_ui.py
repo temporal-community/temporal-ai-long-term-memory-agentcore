@@ -381,7 +381,8 @@ def test_chat_animates_while_waiting_then_appends_only_final_reply(
         state["mode"] = config
         return handle, copy.deepcopy(state)
 
-    async def wait(active_handle, predicate):
+    async def wait(active_handle, turn):
+        handle.turn_id = turn["id"]
         await asyncio.sleep(0.15)
         assert "Nicole is considering your evening" in output.getvalue()
         assert "A little" not in output.getvalue()
@@ -392,12 +393,11 @@ def test_chat_animates_while_waiting_then_appends_only_final_reply(
             ]
         )
         state["completed_turn"] = handle.turn_id
-        assert predicate(state)
         return copy.deepcopy(state)
 
     monkeypatch.setattr(cli, "LocalRuntime", Runtime)
     monkeypatch.setattr(cli, "start_night", start)
-    monkeypatch.setattr(cli, "wait_view", wait)
+    monkeypatch.setattr(cli, "interact", wait)
     args = cli.parser().parse_args(
         [
             "--runtime",

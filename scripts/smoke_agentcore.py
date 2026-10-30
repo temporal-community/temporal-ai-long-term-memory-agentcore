@@ -11,7 +11,7 @@ import boto3
 
 from nicole import store
 from nicole.cli import send_turn
-from nicole.runtime import AgentCoreRuntime, visit_histories, wait_view
+from nicole.runtime import AgentCoreRuntime, interact, visit_histories, wait_view
 from nicole.settings import load_env, state_dir
 from nicole.workflow import MovieNight
 
@@ -53,7 +53,7 @@ async def main():
     )
     evidence["first_run_id"] = handle.first_execution_run_id
     print("Started isolated cloud smoke Workflow " + workflow_id, flush=True)
-    state = await wait_view(handle, lambda s: s["phase"] == "waiting", timeout=240)
+    state = await interact(handle, timeout=240)
     print("AgentCore Worker returned the greeting", flush=True)
     state = await send_turn(
         handle,

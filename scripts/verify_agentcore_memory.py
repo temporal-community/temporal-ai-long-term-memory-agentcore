@@ -7,7 +7,7 @@ from uuid import uuid4
 from temporalio.worker import Replayer
 
 from nicole.memory import retrieve
-from nicole.runtime import AgentCoreRuntime, visit_histories, wait_view
+from nicole.runtime import AgentCoreRuntime, interact, visit_histories
 from nicole.settings import load_env, state_dir
 from nicole.workflow import MovieNight
 
@@ -67,7 +67,7 @@ async def main():
         id=evidence["workflow_id"] + "-return-" + uuid4().hex[:6],
         task_queue=runtime.deployment["task_queue"],
     )
-    new = await wait_view(second, lambda s: s["phase"] == "waiting", timeout=240)
+    new = await interact(second, timeout=240)
     assert new["memories"] and new["constraints"] == {} and new["candidates"] == []
     assert not new["selected"] and not new["saved"]
     await second.signal("close")

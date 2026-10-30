@@ -98,7 +98,7 @@ def test_default_resume_keeps_local_runtime_and_endnight_terminates(
     monkeypatch.setattr(cli, "LocalRuntime", Runtime)
     monkeypatch.setattr(cli, "AgentCoreRuntime", unexpected)
     monkeypatch.setattr(cli, "recover_failed_step", recover)
-    monkeypatch.setattr(cli, "wait_view", wait)
+    monkeypatch.setattr(cli, "interact", wait)
     monkeypatch.setattr(console, "input", read_input)
     args = cli.parser().parse_args(["resume", "--plain-chat"])
     if ended:

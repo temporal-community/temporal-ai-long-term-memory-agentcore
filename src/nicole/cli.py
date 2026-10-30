@@ -15,9 +15,9 @@ from nicole.runtime import (
     AgentCoreRuntime,
     LocalRuntime,
     checkpoint_from_history,
+    interact,
     read_handle,
     recover_failed_step,
-    wait_view,
     write_handle,
 )
 from nicole.settings import load_env, state_dir
@@ -147,21 +147,14 @@ async def start_night(client, config, queue):
     write_handle(
         config["actor"], request_id, queue, config.get("worker_runtime", "local")
     )
-    return handle, await wait_view(handle, lambda s: s["phase"] == "waiting")
+    return handle, await interact(handle)
 
 
 async def send_turn(handle, text, script=None):
     turn = {"id": uuid4().hex, "text": text}
     if script:
         turn["script"] = script
-    await handle.signal("say", turn)
-    return await wait_view(
-        handle,
-        lambda s: (
-            s["completed_turn"] == turn["id"]
-            and s["phase"] in {"waiting", "ready_to_save", "complete"}
-        ),
-    )
+    return await interact(handle, turn)
 
 
 async def chat(args, console):
@@ -196,18 +189,9 @@ async def chat(args, console):
                 if pending["request_id"] == handle.id:
                     description = await handle.describe()
                     if description.status.name == "RUNNING":
-                        await handle.signal("say", pending["turn"])
-                        turn_id = pending["turn"]["id"]
-                        await wait_view(
-                            handle, lambda s: s["completed_turn"] == turn_id
-                        )
+                        await interact(handle, pending["turn"])
                     pending_path.unlink()
-            state = await wait_view(
-                handle,
-                lambda s: (
-                    s["phase"] in {"waiting", "ready_to_save", "complete", "closed"}
-                ),
-            )
+            state = await interact(handle)
             if state["actor"] != args.user:
                 raise ValueError("This request belongs to a different user")
             config = state["mode"]
@@ -293,17 +277,10 @@ async def chat(args, console):
             turn = {"id": uuid4().hex, "text": text}
             pending_path = store.handle_path(args.user).with_suffix(".pending.json")
             pending_path.write_text(json.dumps({"request_id": handle.id, "turn": turn}))
-            await handle.signal("say", turn)
             with console.status(
                 "Nicole is considering your evening…", spinner_style=ROSE
             ):
-                state = await wait_view(
-                    handle,
-                    lambda s, turn_id=turn["id"]: (
-                        s["completed_turn"] == turn_id
-                        and s["phase"] in {"waiting", "complete"}
-                    ),
-                )
+                state = await interact(handle, turn)
             view.update(state, input_echoed=True)
             pending_path.unlink(missing_ok=True)
     finally:

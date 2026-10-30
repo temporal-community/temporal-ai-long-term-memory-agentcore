@@ -13,6 +13,7 @@ from temporalio.worker import Replayer, Worker
 from nicole import films
 from nicole.runtime import (
     LocalRuntime,
+    interact,
     recover_failed_lookup,
     recover_failed_step,
     wait_view,
@@ -178,16 +179,16 @@ def test_failed_dialogue_resumes_without_repeating_prior_turn(tmp_path, monkeypa
                     id="test-" + uuid4().hex,
                     task_queue=queue,
                 )
-                await wait_view(handle, lambda s: s["phase"] == "waiting")
-                await handle.signal("say", {"id": "one", "text": "hello"})
-                await wait_view(handle, lambda s: s["completed_turn"] == "one")
-                await handle.signal("say", {"id": "two", "text": "oldboy"})
+                await interact(handle)
+                await interact(handle, {"id": "one", "text": "hello"})
+                with pytest.raises(RuntimeError, match="service could not complete"):
+                    await interact(handle, {"id": "two", "text": "oldboy"})
                 assert (await handle.result())["phase"] == "failed"
                 assert calls == {"retrieve": 1, "hello": 1, "oldboy": 3, "remember": 1}
                 fail = False
                 assert await recover_failed_step(handle, client, "test")
                 handle = client.get_workflow_handle(handle.id)
-                state = await wait_view(handle, lambda s: s["completed_turn"] == "two")
+                state = await interact(handle, {"id": "two", "text": "oldboy"})
                 assert state["phase"] == "waiting"
                 assert [m["text"] for m in state["messages"] if m["role"] == "you"] == [
                     "hello",

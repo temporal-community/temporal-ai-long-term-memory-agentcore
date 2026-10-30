@@ -40,6 +40,7 @@ class MovieNight:
         self.released = False
         self.processed_turns = 0
         self.can_continue = False
+        self.processing_turn = None
         self.state = {
             "phase": "opening",
             "next_action": "retrieve taste",
@@ -79,6 +80,35 @@ class MovieNight:
     def view(self) -> dict:
         return self.state
 
+    @workflow.update
+    async def interact(self, turn: dict | None = None) -> dict:
+        """Wait for a reply on the Worker instead of polling from the CLI."""
+        if turn is not None:
+            self.say(turn)
+
+        def ready():
+            if self.state["phase"] in {"failed", "closed", "complete"}:
+                return True
+            if turn is None:
+                return self.state["phase"] == "waiting" or (
+                    self.state["phase"] == "ready_to_save"
+                    and self.state["mode"].get("stage_pause")
+                )
+            if (
+                self.state["phase"] == "ready_to_save"
+                and self.state["mode"].get("stage_pause")
+                and self.state["completed_turn"] == turn["id"]
+            ):
+                return True  # The rehearsal pauses here until release().
+            return (
+                turn["id"] in self.ids
+                and self.processing_turn != turn["id"]
+                and not any(t["id"] == turn["id"] for t in self.pending)
+            )
+
+        await workflow.wait_condition(ready)
+        return self.state
+
     async def call(self, name: str, data: dict, timeout: int = 30):
         return await workflow.execute_activity(
             name,
@@ -96,7 +126,7 @@ class MovieNight:
         self.state["mode"] = config
         try:
             if checkpoint and self.can_continue:
-                # Signals delivered before run() must not duplicate carried input.
+                # Input delivered before run() must not duplicate carried turns.
                 incoming = [t for t in self.pending if t["id"] not in checkpoint["ids"]]
                 self.state = checkpoint["state"]
                 self.pending = checkpoint["pending"] + incoming
@@ -154,12 +184,15 @@ class MovieNight:
                 if self.closed:
                     break
                 turn = self.pending.pop(0)
+                self.processing_turn = turn["id"]
                 await self.process_turn(turn, config)
+                self.processing_turn = None
                 self.processed_turns += 1
                 if self.can_continue:
                     self.state["total_turns"] += 1
                 if self.state["saved"]:
                     self.state["phase"] = "complete"
+                    await workflow.wait_condition(workflow.all_handlers_finished)
                     return self.state
                 if (
                     self.can_continue
@@ -170,7 +203,13 @@ class MovieNight:
                     )
                 ):
                     # process_turn has awaited every Activity, including memory writes.
-                    await workflow.wait_condition(workflow.all_handlers_finished)
+                    # An Update can enqueue another turn while we wait for the
+                    # previous handler to return. Process it before rolling over.
+                    await workflow.wait_condition(
+                        lambda: workflow.all_handlers_finished() or bool(self.pending)
+                    )
+                    if not workflow.all_handlers_finished():
+                        continue
                     if not workflow.patched("nicole-full-transcript-v1"):
                         self._compact_legacy_working_memory()
                     workflow.continue_as_new(
@@ -192,6 +231,7 @@ class MovieNight:
                 "Your completed progress remains in Temporal.",
                 next_action="inspect service configuration",
             )
+        await workflow.wait_condition(workflow.all_handlers_finished)
         return self.state
 
     def _compact_legacy_working_memory(self):

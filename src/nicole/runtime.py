@@ -12,6 +12,7 @@ from uuid import uuid4
 from temporalio.api.common.v1 import WorkflowExecution
 from temporalio.api.workflowservice.v1 import ResetWorkflowExecutionRequest
 from temporalio.client import Client
+from temporalio.service import RPCError, RPCStatusCode
 
 from nicole.settings import connect_client, identity, state_dir, temporal_target
 
@@ -162,7 +163,37 @@ class AgentCoreRuntime:
         pass
 
 
+async def interact(handle, turn=None, timeout=120) -> dict:
+    """One durable request, with the saved turn ID reused on reconnect."""
+    try:
+        state = await asyncio.wait_for(
+            handle.execute_update(
+                "interact", turn, id=turn["id"] if turn else str(uuid4())
+            ),
+            timeout=timeout,
+        )
+    except TimeoutError:
+        raise RuntimeError(
+            "The Worker has not finished this step. Resume the same request later."
+        ) from None
+    except RPCError as exc:
+        # Completed visits cannot accept Updates. Their recorded result is enough
+        # to render a saved plan, including when completion raced a reconnect.
+        if exc.status not in {
+            RPCStatusCode.NOT_FOUND,
+            RPCStatusCode.FAILED_PRECONDITION,
+        }:
+            raise
+        if (await handle.describe()).status.name != "COMPLETED":
+            raise
+        state = await handle.result()
+    if state["phase"] == "failed":
+        raise RuntimeError(state["error"])
+    return state
+
+
 async def wait_view(handle, predicate, timeout=120) -> dict:
+    """Inspection helper for rehearsals/tests; interactive chat uses Updates."""
     deadline = asyncio.get_running_loop().time() + timeout
     while asyncio.get_running_loop().time() < deadline:
         try:

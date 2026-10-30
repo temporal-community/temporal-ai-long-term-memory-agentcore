@@ -186,14 +186,15 @@ Nicole's short-term pane displays the run number and message count.
 `/new` still creates a separate movie night; Continue-As-New does not.
 
 The Workflow rolls only between completed turns, after awaited Activities,
-including memory submissions. Synchronous Signal handlers finish before the
-handoff. The checkpoint carries pending turns, all accepted turn IDs for
-cross-run deduplication, the last completed turn, opening answers/deferrals,
+including memory submissions. Update handlers finish before the handoff; queued
+Updates are processed first so their callers receive a result. The checkpoint
+carries pending Signals, all accepted turn IDs for cross-run deduplication, the
+last completed turn, opening answers/deferrals,
 constraints, shortlist, earlier verified films, rejected films, selected film,
 showings, retrieved taste records, and save/stage state. The new run skips the
 initial greeting and memory read. It does not repeat completed model decisions,
 lookups, or memory submissions. CLI handles remain Workflow-ID based, so resume,
-queries, and the pending-turn retry file continue to target the same evening.
+Updates, and the pending-turn retry file continue to target the same evening.
 Saving uses the same request ID across the entire chain.
 
 At each rollover, the checkpoint keeps the **full conversation**. Later model
