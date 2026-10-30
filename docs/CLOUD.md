@@ -286,13 +286,14 @@ Run `make test`, `make lint`, and `uv run nicole stage --auto --width 100`
 for the local checks. Cloud checks are separate: the rehearsal commands above
 use real services and must complete before treating the deployment as verified.
 
-The last live cloud checks were run on October 23, 2026. A fresh Workflow
-retrieved all four favorite films from AgentCore Memory, omitted the favorites
-intake question, and began with fresh nightly constraints. The favorites-input
-fix was deployed as an immutable Runtime version. Earlier cloud rehearsals
-verified Worker replacement, idempotent saved plans, Continue-As-New across two
-runs, S3 payload hydration, unchanged completed-lookup counts, and Event History
-replay. Local receipts are intentionally excluded from the public repository.
+The latest live cloud checks passed October 30, 2026, on Runtime version 9.
+The rehearsal verified cinema-to-home recommendations, full-transcript
+Continue-As-New across two runs, a different Worker after idle drain, and a saved
+plan without repeating earlier decisions or lookups. Claim check stored a
+29-showing, 18,700-byte payload in S3 with a 507-byte reference in Event History;
+hydration and replay passed. AgentCore extracted the submitted favorites, and a
+fresh visit retrieved them with new nightly state. Local receipts are intentionally
+excluded from the public repository.
 
 Those historical results do not verify a new account's configuration, current
 provider availability, or live cinema coverage. Run the rehearsal against your

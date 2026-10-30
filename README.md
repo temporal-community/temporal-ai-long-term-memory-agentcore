@@ -477,11 +477,12 @@ chargeable service calls to verify actual memory extraction, replacement compute
 S3 hydration, saved plans, and replay, which the offline tests cannot establish.
 
 Local tests, lint, and formatting passed October 30, 2026 (197 tests), including
-the unattended offline stage. The last live cloud memory and fresh-visit check
-was October 23. Full-transcript rollover is verified locally with claim-check
-storage and Worker replacement. Waiting Updates are verified locally across
-Worker replacement, retries, rollover, and saving. These changes have not been
-deployed to AgentCore.
+the unattended offline stage. The current code was deployed to AgentCore and
+passed the live cloud checks that day: recommendations, a cinema-to-home switch,
+full-transcript Continue-As-New, saving on a replacement Worker after idle drain,
+S3 payload retrieval, memory extraction and retrieval in a fresh visit, and
+Event History replay. Local tests also cover retry deduplication and Worker loss
+while an Update is in progress.
 
 ## Related walkthrough
 
