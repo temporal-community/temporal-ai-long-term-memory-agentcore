@@ -1,0 +1,28 @@
+{
+  "name": "NicoleFilmPreferences",
+  "description": "Film taste and movie-specific feedback across conversations",
+  "eventExpiryDuration": 30,
+  "memoryExecutionRoleArn": "<MEMORY_EXECUTION_ROLE_ARN>",
+  "memoryStrategies": [
+    {
+      "customMemoryStrategy": {
+        "name": "FilmTaste",
+        "namespaceTemplates": [
+          "/nicole/{actorId}/preferences/"
+        ],
+        "configuration": {
+          "userPreferenceOverride": {
+            "extraction": {
+              "modelId": "<SUPPORTED_EXTRACTION_MODEL_ID>",
+              "appendToPrompt": "Analyze the current conversation for lasting film preferences. Use the user's messages as evidence; assistant messages clarify context but are not evidence of the user's taste. Prior conversation is context only. Clean up disfluencies faithfully. Preserve explicitly named favorites, movie-specific likes and dislikes, the stated reasons, and watched-film statements. Categorize by favorites, genre, pacing, tone, themes, visuals, watched, or review, with entertainment and movies as topic categories. Preserve qualifications. Do not infer a dislike of a genre from disliking one film. Only infer a general taste pattern when there is strong repeated evidence, and describe it as tentative. Do not extract tonight-only moods, runtime constraints, current task progress, assistant recommendations, or unsupported film facts. Ask no questions in extraction; omit ambiguous claims. Produce the required user-preference output format, using context to preserve the supporting utterance and relevant film names. Return an empty list when nothing lasting was expressed. Also retain explicit recurring cinema, screening-format, and subtitle preferences. Classify these as cinema, format, or subtitles. Do not treat the location used for this search, a showing time or date, a selected showing, a booking link, or an evening plan as a lasting preference."
+            },
+            "consolidation": {
+              "modelId": "<SUPPORTED_EXTRACTION_MODEL_ID>",
+              "appendToPrompt": "Compare each new film-preference memory with the supplied existing records. Select AddMemory for a new lasting preference, UpdateMemory for a correction or closely related refinement, and SkipMemory for duplicates, speculation, or temporary mood. An explicit recent correction by the user takes precedence over an older inference. Preserve useful reasons, movie names, qualifications, and temporal context. Merge only closely related preferences; do not merge all film taste into one vague claim. Preserve the existing output format and operation names. For UpdateMemory use the supplied existing record ID and provide the full revised memory. Do not invent record IDs or user preferences."
+            }
+          }
+        }
+      }
+    }
+  ]
+}

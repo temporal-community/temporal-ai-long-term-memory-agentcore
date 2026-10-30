@@ -1,0 +1,914 @@
+{
+  "schema_version": 1,
+  "description": "Demo schedule derived from published Oakland weekend listings. Original films, cinemas, formats, and local times are reused on the requested date; these are not current published screenings. Identical film/cinema/time/format combinations are merged.",
+  "captured_at": "2026-10-20T00:17:17.663232+00:00",
+  "source_dates": [
+    "2026-10-23",
+    "2026-10-24",
+    "2026-10-25"
+  ],
+  "sources": [
+    "https://gkids.com/ghiblifest/",
+    "https://thenewparkway.com/",
+    "https://thenewparkway.com/movie/a-girl-walks-home-alone-at-night",
+    "https://thenewparkway.com/movie/if-i-go-will-they-miss-me",
+    "https://thenewparkway.com/movie/it-follows",
+    "https://thenewparkway.com/movie/naza-2",
+    "https://thenewparkway.com/movie/nightmare-on-elm-street",
+    "https://thenewparkway.com/movie/primetime",
+    "https://thenewparkway.com/movie/scooby-doo-animation-ko",
+    "https://thenewparkway.com/movie/shaun-the-sheep-the-beast-of-mossy-bottom",
+    "https://thenewparkway.com/movie/taiwanese-film-screening-march-of-happiness",
+    "https://thenewparkway.com/movie/the-history-of-concrete",
+    "https://thenewparkway.com/movie/wicker",
+    "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes",
+    "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-19",
+    "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-20",
+    "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-21",
+    "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-22",
+    "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+    "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-24",
+    "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-25",
+    "https://www.renaissancerialto.com/"
+  ],
+  "cinemas": [
+    {
+      "id": "grand-lake",
+      "name": "Grand Lake Theatre",
+      "address": "3200 Grand Avenue, Oakland, CA 94610",
+      "latitude": 37.8119,
+      "longitude": -122.2479,
+      "coordinate_note": "Approximate theater center",
+      "source_url": "https://www.renaissancerialto.com/"
+    },
+    {
+      "id": "new-parkway",
+      "name": "The New Parkway Theater",
+      "address": "474 24th Street, Oakland, CA 94612",
+      "latitude": 37.8147,
+      "longitude": -122.2678,
+      "coordinate_note": "Approximate theater center",
+      "source_url": "https://thenewparkway.com/"
+    },
+    {
+      "id": "amc-bay-street-16",
+      "name": "AMC Bay Street 16",
+      "address": "5614 Bay Street, Suite 220, Emeryville, CA 94608",
+      "latitude": 37.8335,
+      "longitude": -122.2916,
+      "coordinate_note": "Approximate theater center",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes",
+      "captured_at": "2026-10-20T00:26:51.436791+00:00"
+    }
+  ],
+  "showtimes": [
+    {
+      "id": "sample-001",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "13:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Street Fighter",
+        "year": "2026",
+        "imdb_id": "tt27419420",
+        "minutes": 119,
+        "genre": "Action",
+        "plot": "Ryu and Ken enter the World Warrior Tournament as a conspiracy turns their reunion into a confrontation with their shared past.",
+        "movie_id": "sample-film-d4c335f0d247"
+      }
+    },
+    {
+      "id": "sample-002",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "13:00:00",
+      "format": "Dolby Cinema at AMC · Format not specified",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Wildwood",
+        "year": "2026",
+        "imdb_id": "tt2056785",
+        "minutes": 132,
+        "genre": "Animation, Adventure, Drama",
+        "plot": "Prue ventures into the forests outside Portland to rescue her kidnapped brother in a stop-motion fantasy adventure.",
+        "movie_id": "sample-film-8bd9053432c2"
+      }
+    },
+    {
+      "id": "sample-003",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "13:15:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-004",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "14:00:00",
+      "format": "Open Caption (On-screen Subtitles) · Laser at AMC",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Clayface",
+        "year": "2026",
+        "imdb_id": "tt34890576",
+        "minutes": 108,
+        "genre": "Horror, Sci-Fi, Thriller",
+        "plot": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+        "movie_id": "sample-film-f50198a89b86"
+      }
+    },
+    {
+      "id": "sample-005",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "14:00:00",
+      "format": "IMAX with Laser at AMC · IMAX at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Street Fighter",
+        "year": "2026",
+        "imdb_id": "tt27419420",
+        "minutes": 119,
+        "genre": "Action",
+        "plot": "Ryu and Ken enter the World Warrior Tournament as a conspiracy turns their reunion into a confrontation with their shared past.",
+        "movie_id": "sample-film-d4c335f0d247"
+      }
+    },
+    {
+      "id": "sample-006",
+      "cinema_id": "grand-lake",
+      "local_time": "15:45:00",
+      "format": "Digital projection",
+      "source_url": "https://www.renaissancerialto.com/",
+      "movie": {
+        "title": "Wildwood",
+        "year": "2026",
+        "imdb_id": "tt2056785",
+        "minutes": 132,
+        "genre": "Animation, Adventure, Drama",
+        "plot": "Prue ventures into the forests outside Portland to rescue her kidnapped brother in a stop-motion fantasy adventure.",
+        "movie_id": "sample-film-8bd9053432c2"
+      }
+    },
+    {
+      "id": "sample-007",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "16:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Street Fighter",
+        "year": "2026",
+        "imdb_id": "tt27419420",
+        "minutes": 119,
+        "genre": "Action",
+        "plot": "Ryu and Ken enter the World Warrior Tournament as a conspiracy turns their reunion into a confrontation with their shared past.",
+        "movie_id": "sample-film-d4c335f0d247"
+      }
+    },
+    {
+      "id": "sample-008",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "16:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-009",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "16:00:00",
+      "format": "Laser at AMC · Closed Caption",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Wildwood",
+        "year": "2026",
+        "imdb_id": "tt2056785",
+        "minutes": 132,
+        "genre": "Animation, Adventure, Drama",
+        "plot": "Prue ventures into the forests outside Portland to rescue her kidnapped brother in a stop-motion fantasy adventure.",
+        "movie_id": "sample-film-8bd9053432c2"
+      }
+    },
+    {
+      "id": "sample-010",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "16:10:00",
+      "format": "Dolby Cinema at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Clayface",
+        "year": "2026",
+        "imdb_id": "tt34890576",
+        "minutes": 108,
+        "genre": "Horror, Sci-Fi, Thriller",
+        "plot": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+        "movie_id": "sample-film-f50198a89b86"
+      }
+    },
+    {
+      "id": "sample-011",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "17:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Clayface",
+        "year": "2026",
+        "imdb_id": "tt34890576",
+        "minutes": 108,
+        "genre": "Horror, Sci-Fi, Thriller",
+        "plot": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+        "movie_id": "sample-film-f50198a89b86"
+      }
+    },
+    {
+      "id": "sample-012",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "17:00:00",
+      "format": "IMAX with Laser at AMC · IMAX at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Street Fighter",
+        "year": "2026",
+        "imdb_id": "tt27419420",
+        "minutes": 119,
+        "genre": "Action",
+        "plot": "Ryu and Ken enter the World Warrior Tournament as a conspiracy turns their reunion into a confrontation with their shared past.",
+        "movie_id": "sample-film-d4c335f0d247"
+      }
+    },
+    {
+      "id": "sample-013",
+      "cinema_id": "new-parkway",
+      "local_time": "17:20:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/wicker",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-014",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "18:45:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-015",
+      "cinema_id": "grand-lake",
+      "local_time": "18:45:00",
+      "format": "Digital projection",
+      "source_url": "https://www.renaissancerialto.com/",
+      "movie": {
+        "title": "Wildwood",
+        "year": "2026",
+        "imdb_id": "tt2056785",
+        "minutes": 132,
+        "genre": "Animation, Adventure, Drama",
+        "plot": "Prue ventures into the forests outside Portland to rescue her kidnapped brother in a stop-motion fantasy adventure.",
+        "movie_id": "sample-film-8bd9053432c2"
+      }
+    },
+    {
+      "id": "sample-016",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "19:00:00",
+      "format": "Dolby Cinema at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Clayface",
+        "year": "2026",
+        "imdb_id": "tt34890576",
+        "minutes": 108,
+        "genre": "Horror, Sci-Fi, Thriller",
+        "plot": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+        "movie_id": "sample-film-f50198a89b86"
+      }
+    },
+    {
+      "id": "sample-017",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "19:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Street Fighter",
+        "year": "2026",
+        "imdb_id": "tt27419420",
+        "minutes": 119,
+        "genre": "Action",
+        "plot": "Ryu and Ken enter the World Warrior Tournament as a conspiracy turns their reunion into a confrontation with their shared past.",
+        "movie_id": "sample-film-d4c335f0d247"
+      }
+    },
+    {
+      "id": "sample-018",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "19:15:00",
+      "format": "Laser at AMC · Closed Caption",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Wildwood",
+        "year": "2026",
+        "imdb_id": "tt2056785",
+        "minutes": 132,
+        "genre": "Animation, Adventure, Drama",
+        "plot": "Prue ventures into the forests outside Portland to rescue her kidnapped brother in a stop-motion fantasy adventure.",
+        "movie_id": "sample-film-8bd9053432c2"
+      }
+    },
+    {
+      "id": "sample-019",
+      "cinema_id": "new-parkway",
+      "local_time": "19:40:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/wicker",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-020",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "20:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "A Talent for Murder",
+        "year": "2026",
+        "imdb_id": "tt14129116",
+        "minutes": 106,
+        "genre": "Biography, Crime, Drama",
+        "plot": "A mysterious young man from a New York publisher is sent to Switzerland to persuade the renowned writer Patricia Highsmith to write one final installment of the Ripley anthology.",
+        "movie_id": "sample-film-5346ad36e109"
+      }
+    },
+    {
+      "id": "sample-021",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "20:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Clayface",
+        "year": "2026",
+        "imdb_id": "tt34890576",
+        "minutes": 108,
+        "genre": "Horror, Sci-Fi, Thriller",
+        "plot": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+        "movie_id": "sample-film-f50198a89b86"
+      }
+    },
+    {
+      "id": "sample-022",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "20:00:00",
+      "format": "IMAX with Laser at AMC · IMAX at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Street Fighter",
+        "year": "2026",
+        "imdb_id": "tt27419420",
+        "minutes": 119,
+        "genre": "Action",
+        "plot": "Ryu and Ken enter the World Warrior Tournament as a conspiracy turns their reunion into a confrontation with their shared past.",
+        "movie_id": "sample-film-d4c335f0d247"
+      }
+    },
+    {
+      "id": "sample-023",
+      "cinema_id": "grand-lake",
+      "local_time": "21:20:00",
+      "format": "Digital projection",
+      "source_url": "https://www.renaissancerialto.com/",
+      "movie": {
+        "title": "Wildwood",
+        "year": "2026",
+        "imdb_id": "tt2056785",
+        "minutes": 132,
+        "genre": "Animation, Adventure, Drama",
+        "plot": "Prue ventures into the forests outside Portland to rescue her kidnapped brother in a stop-motion fantasy adventure.",
+        "movie_id": "sample-film-8bd9053432c2"
+      }
+    },
+    {
+      "id": "sample-024",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "21:30:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-025",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "22:00:00",
+      "format": "Dolby Cinema at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Clayface",
+        "year": "2026",
+        "imdb_id": "tt34890576",
+        "minutes": 108,
+        "genre": "Horror, Sci-Fi, Thriller",
+        "plot": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+        "movie_id": "sample-film-f50198a89b86"
+      }
+    },
+    {
+      "id": "sample-026",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "22:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Street Fighter",
+        "year": "2026",
+        "imdb_id": "tt27419420",
+        "minutes": 119,
+        "genre": "Action",
+        "plot": "Ryu and Ken enter the World Warrior Tournament as a conspiracy turns their reunion into a confrontation with their shared past.",
+        "movie_id": "sample-film-d4c335f0d247"
+      }
+    },
+    {
+      "id": "sample-027",
+      "cinema_id": "new-parkway",
+      "local_time": "22:00:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/wicker",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-028",
+      "cinema_id": "new-parkway",
+      "local_time": "22:30:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/nightmare-on-elm-street",
+      "movie": {
+        "title": "A Nightmare on Elm Street",
+        "year": "1984",
+        "imdb_id": null,
+        "minutes": 91,
+        "genre": "Horror",
+        "plot": "Teenagers discover that a killer stalking their dreams can harm them in waking life.",
+        "movie_id": "sample-film-e2df43ac4c81"
+      }
+    },
+    {
+      "id": "sample-029",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "23:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Clayface",
+        "year": "2026",
+        "imdb_id": "tt34890576",
+        "minutes": 108,
+        "genre": "Horror, Sci-Fi, Thriller",
+        "plot": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+        "movie_id": "sample-film-f50198a89b86"
+      }
+    },
+    {
+      "id": "sample-030",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "23:00:00",
+      "format": "IMAX with Laser at AMC · IMAX at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-23",
+      "movie": {
+        "title": "Street Fighter",
+        "year": "2026",
+        "imdb_id": "tt27419420",
+        "minutes": 119,
+        "genre": "Action",
+        "plot": "Ryu and Ken enter the World Warrior Tournament as a conspiracy turns their reunion into a confrontation with their shared past.",
+        "movie_id": "sample-film-d4c335f0d247"
+      }
+    },
+    {
+      "id": "sample-031",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "12:30:00",
+      "format": "Korean Spoken with No Subtitles · RealD 3D · Laser at AMC",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-24",
+      "movie": {
+        "title": "Hybe Cheering Party",
+        "year": "2026",
+        "imdb_id": "tt46659669",
+        "minutes": 60,
+        "genre": "Documentary, Horror",
+        "plot": "Come and sing along to 3D-enhanced on-screen lyrics, and music videos from your favorite HYBE artists: BTS, SEVENTEEN, TOMORROW X TOGETHER, ENHYPEN, LE SSERAFIM, &amp;TEAM, BOYNEXTDOOR, TWS, ILLIT, KATSEYE, aoen, CORTIS, and SANTOS BR...",
+        "movie_id": "sample-film-eb8cfb62d610"
+      }
+    },
+    {
+      "id": "sample-032",
+      "cinema_id": "grand-lake",
+      "local_time": "12:30:00",
+      "format": "Digital projection",
+      "source_url": "https://www.renaissancerialto.com/",
+      "movie": {
+        "title": "Wildwood",
+        "year": "2026",
+        "imdb_id": "tt2056785",
+        "minutes": 132,
+        "genre": "Animation, Adventure, Drama",
+        "plot": "Prue ventures into the forests outside Portland to rescue her kidnapped brother in a stop-motion fantasy adventure.",
+        "movie_id": "sample-film-8bd9053432c2"
+      }
+    },
+    {
+      "id": "sample-033",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "12:45:00",
+      "format": "Dolby Cinema at AMC · Format not specified",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-24",
+      "movie": {
+        "title": "Wildwood",
+        "year": "2026",
+        "imdb_id": "tt2056785",
+        "minutes": 132,
+        "genre": "Animation, Adventure, Drama",
+        "plot": "Prue ventures into the forests outside Portland to rescue her kidnapped brother in a stop-motion fantasy adventure.",
+        "movie_id": "sample-film-8bd9053432c2"
+      }
+    },
+    {
+      "id": "sample-034",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "14:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-24",
+      "movie": {
+        "title": "Clayface",
+        "year": "2026",
+        "imdb_id": "tt34890576",
+        "minutes": 108,
+        "genre": "Horror, Sci-Fi, Thriller",
+        "plot": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+        "movie_id": "sample-film-f50198a89b86"
+      }
+    },
+    {
+      "id": "sample-035",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "14:00:00",
+      "format": "Laser at AMC · 20th Anniversary",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-24",
+      "movie": {
+        "title": "Marie Antoinette",
+        "year": "2006",
+        "imdb_id": "tt0422720",
+        "genre": "Biography, Drama, History",
+        "plot": "The retelling of France's iconic but ill-fated queen, Marie Antoinette. From her betrothal and marriage to Louis XVI at 14 to her reign as queen at 19 and to the end of her reign as queen, and ultimately the fall of Versailles.",
+        "minutes": 123,
+        "movie_id": "sample-film-2fee2e27fee5"
+      }
+    },
+    {
+      "id": "sample-036",
+      "cinema_id": "new-parkway",
+      "local_time": "14:00:00",
+      "format": "English subtitles · Discussion/Q&A · Format not specified",
+      "source_url": "https://thenewparkway.com/movie/taiwanese-film-screening-march-of-happiness",
+      "movie": {
+        "title": "March of Happiness",
+        "year": "1999",
+        "imdb_id": null,
+        "minutes": 100,
+        "genre": "Drama, History",
+        "plot": "Lives in a Taiwanese community intersect amid the political upheaval of 1947.",
+        "movie_id": "sample-film-3a0534e3e1bd"
+      }
+    },
+    {
+      "id": "sample-037",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "15:45:00",
+      "format": "Korean Spoken with No Subtitles · Laser at AMC",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-24",
+      "movie": {
+        "title": "BTS World Tour 'Arirang' in Buenos Aires: Live Viewing",
+        "year": "2026",
+        "imdb_id": "tt45591705",
+        "minutes": 195,
+        "genre": "Documentary, Music",
+        "plot": "The first-ever BTS Live Viewing broadcast from South America. Experience the BTS WORLD TOUR 'ARIRANG' in cinemas worldwide, broadcasting from Buenos Aires. Marking BTS' first-ever performance in Argentina.",
+        "movie_id": "sample-film-e70a4d17e06b"
+      }
+    },
+    {
+      "id": "sample-038",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "16:00:00",
+      "format": "Dolby Cinema at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-24",
+      "movie": {
+        "title": "Clayface",
+        "year": "2026",
+        "imdb_id": "tt34890576",
+        "minutes": 108,
+        "genre": "Horror, Sci-Fi, Thriller",
+        "plot": "Rising Hollywood star Matt Hagen descends into a horrifying revenge-filled monster when scientific ambition strips him of his identity and humanity.",
+        "movie_id": "sample-film-f50198a89b86"
+      }
+    },
+    {
+      "id": "sample-039",
+      "cinema_id": "new-parkway",
+      "local_time": "16:20:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/wicker",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-040",
+      "cinema_id": "new-parkway",
+      "local_time": "18:40:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/wicker",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-041",
+      "cinema_id": "new-parkway",
+      "local_time": "21:00:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/wicker",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-042",
+      "cinema_id": "new-parkway",
+      "local_time": "22:00:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/it-follows",
+      "movie": {
+        "title": "It Follows",
+        "year": "2014",
+        "imdb_id": null,
+        "minutes": 100,
+        "genre": "Horror, Mystery",
+        "plot": "A young woman must evade a relentless supernatural pursuer that others cannot see.",
+        "movie_id": "sample-film-7db037cd903e"
+      }
+    },
+    {
+      "id": "sample-043",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "13:45:00",
+      "format": "Korean Spoken with No Subtitles · Laser at AMC",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-25",
+      "movie": {
+        "title": "BTS World Tour 'Arirang' in Buenos Aires: Live Viewing",
+        "year": "2026",
+        "imdb_id": "tt45591705",
+        "minutes": 195,
+        "genre": "Documentary, Music",
+        "plot": "The first-ever BTS Live Viewing broadcast from South America. Experience the BTS WORLD TOUR 'ARIRANG' in cinemas worldwide, broadcasting from Buenos Aires. Marking BTS' first-ever performance in Argentina.",
+        "movie_id": "sample-film-e70a4d17e06b"
+      }
+    },
+    {
+      "id": "sample-044",
+      "cinema_id": "new-parkway",
+      "local_time": "13:55:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/wicker",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-045",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "14:30:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-25",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-046",
+      "cinema_id": "new-parkway",
+      "local_time": "16:10:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/wicker",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-047",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "16:15:00",
+      "format": "Dolby Cinema at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-25",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-048",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "17:15:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-25",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-049",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "18:30:00",
+      "format": "Korean Spoken with No Subtitles · Laser at AMC",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-25",
+      "movie": {
+        "title": "ENHYPEN World Tour 'Blood Saga'",
+        "year": "2026",
+        "imdb_id": "tt46658854",
+        "minutes": 101,
+        "genre": "Documentary, Music",
+        "plot": "ENHYPEN's world tour 'BLOOD SAGA' brings a mesmerizing dark fantasy to life. Relive the unforgettable Seoul concert that launched the tour, featuring fierce, synchronized choreography in a spectacular stage production.",
+        "movie_id": "sample-film-a9f302bcb39c"
+      }
+    },
+    {
+      "id": "sample-050",
+      "cinema_id": "new-parkway",
+      "local_time": "18:30:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/a-girl-walks-home-alone-at-night",
+      "movie": {
+        "title": "A Girl Walks Home Alone at Night",
+        "year": "2014",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Horror, Drama",
+        "plot": "A solitary vampire moves through an Iranian ghost town in a black-and-white nocturnal romance.",
+        "movie_id": "sample-film-c374a64faa80"
+      }
+    },
+    {
+      "id": "sample-051",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "20:00:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-25",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-052",
+      "cinema_id": "new-parkway",
+      "local_time": "20:50:00",
+      "format": "Format not specified",
+      "source_url": "https://thenewparkway.com/movie/wicker",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    },
+    {
+      "id": "sample-053",
+      "cinema_id": "amc-bay-street-16",
+      "local_time": "22:45:00",
+      "format": "Laser at AMC · Closed Caption · Audio Description",
+      "source_url": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-bay-street-16/showtimes?date=2026-10-25",
+      "movie": {
+        "title": "Wicker",
+        "year": "2026",
+        "imdb_id": null,
+        "minutes": 105,
+        "genre": "Romance, Fantasy, Comedy",
+        "plot": "A fisherwoman commissions a husband woven from wicker, unsettling the conventions and jealousies of her seaside village.",
+        "movie_id": "sample-film-baea4ed1f795"
+      }
+    }
+  ]
+}
