@@ -4,7 +4,8 @@ AI agents need to keep track of a conversation while they work and carry useful
 information into later conversations. If the conversation and next step live only
 in the running process, stopping that process means losing progress. Serverless
 applications need to handle this routinely, because compute can stop while the
-agent is waiting for a reply. They also need to decide which information belongs
+agent is waiting for a reply. The failure mode is a **lost conversation**: the
+agent forgets what you said tonight and where the work stood. They also need to decide which information belongs
 to the current interaction and which is worth keeping for the next one.
 
 This repo shows how to handle both with Nicole, a film-recommendation agent built
@@ -16,23 +17,51 @@ night, and lasting taste helps with future recommendations. The walkthrough
 explains how that state and memory become context for each model call, so you
 can use the same approach in your own serverless agent.
 
+> [!IMPORTANT]
+> **For Lenny before merge** (from Melanie's review; remove this block once done):
+>
+> 1. **Image:** add a screenshot or GIF of the terminal with the state and
+>    memory panels right here, under the intro. A short clip from the video works
+>    too.
+> 2. **Cost:** replace the estimate in [Cost to run](#cost-to-run) with one
+>    measured live movie night: model calls, input and output tokens, dollars,
+>    and the date. OpenRouter's activity page lists each request.
+> 3. **Two files:** `examples/legacy_memory.py` (an offline prototype) and
+>    `scripts/render_frames.py` (renders presentation fixtures). If readers use
+>    them, say what for in the README. If they're only for presenting, move them
+>    out of the repo.
+> 4. **Errors:** add the three errors people hit most as a table (You see,
+>    Cause, Fix) with exact strings from real runs.
+> 5. **Acknowledgments:** name everyone who reviewed the demo.
+> 6. **Video:** add the link and chapters once it's published.
+
+**Last verified:** 2026-11-04 (tests and the offline demo). The live AgentCore
+checks weren't re-run; they last passed 2026-10-30.
+
 ## How to run Nicole
 
 Install Python 3.11+, [uv](https://docs.astral.sh/uv/), and the
 [Temporal CLI](https://docs.temporal.io/cli), then run:
 
 ```sh
-uv sync --group dev
+uv sync --group dev   # or: make setup; exits 0
 ```
 
-### Demo rehearsal mode
+### Offline demo (no keys)
 
 ```sh
-uv run nicole stage
+uv run nicole stage   # or: make run
 ```
 
-Press Enter at each cue, or add `--auto --width 100` to run unattended with
-Event History replay. Use a terminal at least 100 columns wide and 44 rows tall.
+Press Enter at each prompt, or add `--auto --width 100` to run unattended with
+Event History replay. What you'll see:
+
+| Moment | On screen |
+| --- | --- |
+| A second visit starts in a new Worker process | `NEW TEMPORAL WORKER`, and `Favorite films: Arrival, …` comes back from the notebook |
+| A tonight-only answer | `No lasting preference added` |
+| The Worker stops before the plan is saved | `WORKER GONE`, with `Next: save tonight's pick` |
+| A new Worker finishes the evening | `NEW TEMPORAL WORKER`, `✓ Saved for tonight`, then `Remembered taste. Resumed work. A lovely evening.` | Use a terminal at least 100 columns wide and 44 rows tall.
 No credentials are needed: dialogue and film data are fixtures, while a local
 Temporal server handles real execution and recovery, including Worker replacement.
 
@@ -58,7 +87,17 @@ uv run nicole --runtime local
 ```
 
 Nicole starts a local Temporal server if needed and stores local data under
-`.demo-state/nicole/`. See [.env.example](.env.example) for Anthropic, Bedrock,
+`.demo-state/nicole/`.
+
+**Stop the Worker and pick up again.** While a visit is open, run
+`make failure` (`pkill -f "nicole.worker"`) in a second terminal. That stops the
+local Worker the way serverless compute stops between turns, and the visit's
+Workflow stays open in Temporal with no Worker. Exit the chat (`/detach`), then
+run `make recovery` (`uv run nicole resume`). A new Worker replays Event History
+and returns you to the same conversation without asking tonight's questions
+again. `make reset` deletes the offline demo's runs, prints
+`Offline demo runs removed.`, and keeps your taste notebook, open visits, and
+deployment receipt. Coding agents: see [AGENTS.md](AGENTS.md). See [.env.example](.env.example) for Anthropic, Bedrock,
 and Temporal Cloud settings. To keep the local Web UI available, run
 `temporal server start-dev` separately and open [localhost:8233](http://localhost:8233).
 
@@ -104,9 +143,27 @@ See [sample data and sources](docs/SCREENINGS.md).
 
 ## Cost to run
 
-The vast majority of the cost comes from model usage and depends heavily on your model choice. This estimate uses Sonnet 4.6. For an eight-turn cinema conversation with Sonnet 4.6, the current code gives
-this illustrative estimate. Prices were checked October 30, 2026; these are
-planning figures, not measured usage or an invoice.
+Almost all of the cost is model calls. When the Worker drains between turns and
+a new one picks up the conversation, Temporal returns each finished model call's
+result from Event History, so the new Worker doesn't call the model again for
+turns that already finished. Only a call that was in flight when a Worker
+stopped can run twice. If the conversation lived only in the process, a stopped
+Worker would mean starting the evening over and paying for those calls again.
+
+**One movie night (estimate):** an eight-turn cinema conversation on Sonnet 4.6
+makes about 10 model calls: about 56,000–60,000 tokens and $0.19–$0.25. With
+Temporal Cloud and AgentCore, the evening comes to about $0.20–$0.26.
+
+**At scale (estimate):** 10,000 movie nights a month come to about 560–600
+million tokens and $1,900–$2,500 in model calls, before the other services.
+
+These are planning estimates from the current code, not a measured run: token
+counts use characters divided by four, with 200–600 output tokens assumed per
+call, at prices checked October 30, 2026. The offline demo makes no model calls,
+so it costs 0 tokens and $0.
+
+<details>
+<summary>The estimate by component</summary>
 
 | Component                                                              | Example usage                                                                                                 | Estimated cost  |
 | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------- |
@@ -118,8 +175,7 @@ planning figures, not measured usage or an invoice.
 
 Opening answers use roughly 3,500–3,700 input tokens each in the offline probe;
 follow-ups after cinema recommendations use around 8,500. Completing intake and
-ranking screenings takes extra model calls. Token estimates use characters divided
-by four, with 200–600 output tokens assumed per call.
+ranking screenings takes extra model calls.
 
 The CLI sends one Workflow Update per turn and waits for its result, without
 polling for status. This example uses 22 Activity executions, 9 Updates (including
@@ -129,8 +185,9 @@ remain for another five minutes. Nearby turns may reuse that session.
 
 The subtotal excludes storage, support, and provider subscriptions or fees.
 The provider secret also costs
-[about $0.40/month](https://aws.amazon.com/secrets-manager/pricing/). The offline
-rehearsal uses zero model tokens and makes no paid-service calls.
+[about $0.40/month](https://aws.amazon.com/secrets-manager/pricing/).
+
+</details>
 
 ## Context, long-term memory, and state
 
@@ -159,7 +216,9 @@ A new visit starts a new Workflow with fresh nightly decisions and retrieves tas
 for the same user. Continue-As-New, described below, starts a new **run of the same
 Workflow** and carries the current evening forward.
 
-## The Workflow and its Activities
+<a id="the-workflow-and-its-activities"></a>
+
+## How it works: the Workflow and its Activities
 
 The agent is written directly in Python with the Temporal SDK, without Strands
 or another agent framework. The model chooses how to respond and which films to
@@ -172,8 +231,13 @@ manual inspection; the chat does not poll it. Between turns the Workflow waits
 for your next message, then calls Activities for whatever external
 work is needed. It finishes when you save a plan or close the visit.
 
+<details>
+<summary>Diagram: how the pieces connect</summary>
+
 ```mermaid
 flowchart LR
+    accTitle: How Nicole's pieces connect
+    accDescr: The terminal CLI sends messages to the Temporal Service, which gives tasks to a local or AgentCore Worker. The Worker calls the dialogue model, film and screening services, the taste notebook or AgentCore Memory, and SQLite or DynamoDB.
     CLI[Terminal CLI] -->|Messages and replies| T[Temporal Service]
     T <-->|Tasks and recorded results| W[Worker: local or AgentCore Runtime]
     W --> M[Dialogue model]
@@ -181,6 +245,8 @@ flowchart LR
     W --> L[Local notebook or AgentCore Memory]
     W --> D[SQLite or DynamoDB: turns and saved plans]
 ```
+
+</details>
 
 Both Workflow code and Activities run on a Worker, but the Workflow’s progress
 lives in the Temporal Service. This means a replacement Worker can
@@ -200,7 +266,9 @@ to the model on its next call.
 | `save_tonight`   | Confirms the selected plan in the domain store             |
 
 Putting the model call inside an Activity lets Temporal record its result and
-retry it if it fails. Workflow code can then use that recorded decision during
+retry it if it fails. The model clients' own retries are off (`max_retries=0` or
+the equivalent), so Temporal's retry policy, three attempts, is the only retry
+layer. Workflow code can then use that recorded decision during
 replay, without making another network call or asking the model to decide again.
 The same applies to successful film lookups when another Worker picks up the
 conversation.
@@ -440,7 +508,7 @@ if (
 
 The checkpoint keeps the full conversation and tonight’s decisions in `state`.
 `pending` carries queued Signals, and `ids` lets the next run recognize input it
-has already accepted. `released` preserves the offline rehearsal’s pre-save
+has already accepted. `released` preserves the offline demo’s pre-save
 pause state. Queued Updates finish before rollover so their callers receive a
 result; the Workflow waits for those handlers before making the handoff.
 
@@ -460,9 +528,9 @@ for replay compatibility and queue handling.
 ## Verify it
 
 ```sh
-make test
-make lint
-uv run nicole stage --auto --width 100
+make test                               # ends with "197 passed"
+make lint                               # "All checks passed!" and "files already formatted"
+uv run nicole stage --auto --width 100  # exits 0 after "A lovely evening."
 ```
 
 The tests run real local Temporal executions to check Worker replacement, Event
@@ -472,7 +540,7 @@ You do need the Temporal CLI on `PATH` and an environment that allows local
 sockets and subprocesses.
 
 To check your cloud deployment, run the separate
-[rehearsal commands](docs/CLOUD.md#worker-lifecycle-and-rehearsal). These make
+[live cloud checks](docs/CLOUD.md#worker-lifecycle-and-rehearsal). These make
 chargeable service calls to verify actual memory extraction, replacement compute,
 S3 hydration, saved plans, and replay, which the offline tests cannot establish.
 
@@ -484,10 +552,33 @@ S3 payload retrieval, memory extraction and retrieval in a fresh visit, and
 Event History replay. Local tests also cover retry deduplication and Worker loss
 while an Update is in progress.
 
-## Related walkthrough
+## What this demo is not
+
+- **Not a booking service.** Nicole doesn't buy tickets, reserve seats, take
+  payments, or check streaming availability.
+- **Not a recommendation engine.** The model suggests films, and OMDb only
+  verifies that they exist.
+- **Not a production deployment.** The AgentCore Serverless Workers
+  integration is pre-release, the default screenings are sample data, and the
+  offline demo uses scripted turns.
+- **Not a memory-service comparison.** It uses AgentCore Memory's built-in
+  user-preference strategy; other memory services plug in the same way, through
+  an Activity.
+
+## Where to go next
+
+### Video
+
+Link after publish.
+
+### Related walkthrough
 
 [Melanie’s agent memory and state demo](https://github.com/temporal-community/temporal-ai-agent-memory-state-stripe)
 uses a refund agent to examine lost execution progress and effect state. Nicole
 approaches the same questions through a conversation that continues across visits,
 with a long-term memory service and serverless Workers. Together, the demos give
 you two different applications to explore where an agent’s information belongs.
+
+---
+
+**Ready to try this in your own agent?** [Get started here](https://t.mp/ai-video-cta-004).

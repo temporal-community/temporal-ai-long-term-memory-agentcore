@@ -42,7 +42,7 @@ def parser():
         default="chat",
         choices=["chat", "stage", "resume", "status", "doctor"],
     )
-    result.add_argument("--user", default="nyghtowl")
+    result.add_argument("--user", default="demo-user")
     result.add_argument(
         "--provider",
         choices=["bedrock", "anthropic", "openrouter"],

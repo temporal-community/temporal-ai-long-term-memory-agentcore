@@ -8,7 +8,7 @@ from pathlib import Path
 CLI = Path(__file__).resolve().parents[1] / "examples/legacy_memory.py"
 
 
-def run_cli(tmp_path, *args, user="nyghtowl"):
+def run_cli(tmp_path, *args, user="demo-user"):
     return subprocess.run(
         [
             sys.executable,
@@ -25,7 +25,7 @@ def run_cli(tmp_path, *args, user="nyghtowl"):
     ).stdout
 
 
-def memory(tmp_path, user="nyghtowl"):
+def memory(tmp_path, user="demo-user"):
     output = run_cli(tmp_path, "memory", user=user)
     return json.loads(output[output.index("{") :])
 
