@@ -21,7 +21,7 @@ def isolated_store(tmp_path, monkeypatch):
 def turn(**overrides):
     return {
         "id": "fixed-operation",
-        "actor": "nyghtowl",
+        "actor": "demo-user",
         "session": "visit-one",
         "text": "I generally like faster films",
         "reply": "A little more momentum.",
@@ -42,7 +42,7 @@ def turn(**overrides):
 def test_memory_survives_visits_correction_replaces_and_users_are_isolated():
     memory.ingest(turn())
     memory.ingest(turn())
-    assert len(memory.retrieve("nyghtowl", "local")) == 1
+    assert len(memory.retrieve("demo-user", "local")) == 1
     assert memory.retrieve("other", "local") == []
     memory.ingest(
         turn(
@@ -58,7 +58,7 @@ def test_memory_survives_visits_correction_replaces_and_users_are_isolated():
             ],
         )
     )
-    saved = memory.retrieve("nyghtowl", "local")
+    saved = memory.retrieve("demo-user", "local")
     assert len(saved) == 1
     assert saved[0]["source_session"] == "visit-two"
     assert saved[0]["text"].startswith("Enjoys slow")
@@ -73,18 +73,18 @@ def test_temporary_stage_constraint_does_not_become_memory():
     )
     assert decision["constraints"]["max_minutes"] == 120
     memory.ingest(turn(memories=decision["memories"]))
-    assert store.memories("nyghtowl") == []
+    assert store.memories("demo-user") == []
 
 
 def test_saved_pick_is_idempotent_and_conflicting_write_is_rejected():
     movie = films.lookup("The Truman Show", None, False)
-    store.save_pick("request-one", "nyghtowl", movie)
-    store.save_pick("request-one", "nyghtowl", movie)
-    assert store.saved_pick("request-one", "nyghtowl") == movie
+    store.save_pick("request-one", "demo-user", movie)
+    store.save_pick("request-one", "demo-user", movie)
+    assert store.saved_pick("request-one", "demo-user") == movie
     assert store.saved_pick("request-one", "someone-else") is None
     with pytest.raises(ValueError):
-        store.save_pick("request-one", "nyghtowl", films.lookup("Moon", None, False))
-    assert store.saved_pick("request-one", "nyghtowl") == movie
+        store.save_pick("request-one", "demo-user", films.lookup("Moon", None, False))
+    assert store.saved_pick("request-one", "demo-user") == movie
 
 
 def test_omdb_uses_https_timeout_and_does_not_expose_key_on_failure(monkeypatch):
@@ -203,14 +203,14 @@ def test_agentcore_retrieval_is_scoped_to_actor_and_returns_real_records(monkeyp
                             )
                         },
                         "memoryStrategyId": "FilmTaste",
-                        "namespaces": ["/nicole/nyghtowl/preferences/"],
+                        "namespaces": ["/nicole/demo-user/preferences/"],
                         "createdAt": datetime.fromisoformat(turn()["timestamp"]),
                     }
                 ]
             },
             {
                 "memoryId": "NicoleMemory-1234567890",
-                "namespace": "/nicole/nyghtowl/preferences/",
+                "namespace": "/nicole/demo-user/preferences/",
                 "searchCriteria": {
                     "searchQuery": "Movie favorites, film preferences, pacing, "
                     "tone, film reviews and watched films",
@@ -219,7 +219,7 @@ def test_agentcore_retrieval_is_scoped_to_actor_and_returns_real_records(monkeyp
                 "maxResults": 8,
             },
         )
-        records = memory.retrieve("nyghtowl", "agentcore")
+        records = memory.retrieve("demo-user", "agentcore")
         assert records[0]["text"] == "Enjoys thoughtful sci-fi"
         assert records[0]["kind"] == "extracted"
         stub.assert_no_pending_responses()
@@ -241,7 +241,7 @@ def test_agentcore_submission_uses_same_token_and_does_not_claim_extraction_read
 
     params = {
         "memoryId": "NicoleMemory-1234567890",
-        "actorId": "nyghtowl",
+        "actorId": "demo-user",
         "sessionId": "visit-one",
         "clientToken": "fixed-operation",
         "eventTimestamp": datetime.fromisoformat(turn()["timestamp"]),
@@ -265,7 +265,7 @@ def test_agentcore_submission_uses_same_token_and_does_not_claim_extraction_read
             assert "asynchronous" in result["status"]
             assert result["records"] == []
         stub.assert_no_pending_responses()
-    assert store.memories("nyghtowl") == []
+    assert store.memories("demo-user") == []
 
 
 @pytest.mark.parametrize("width", [80, 100, 120])

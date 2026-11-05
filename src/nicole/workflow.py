@@ -16,6 +16,17 @@ from nicole.opening import (
 
 RETRY = RetryPolicy(maximum_attempts=3, initial_interval=timedelta(seconds=1))
 
+# Plain-words labels for each Activity in the Temporal Web UI timeline.
+SUMMARIES = {
+    "retrieve_taste": "Read the taste notebook",
+    "decide_next": "Ask the model for a reply and a decision",
+    "lookup_film": "Verify a film's catalog facts",
+    "find_showtimes": "Find cinema screenings",
+    "remember_turn": "Record the turn and submit lasting taste",
+    "save_tonight": "Save tonight's plan",
+    "stage_checkpoint": "Record the offline demo's pre-save frame",
+}
+
 
 def same_film(left: dict, right: dict) -> bool:
     if left.get("imdb_id") and left.get("imdb_id") == right.get("imdb_id"):
@@ -64,20 +75,24 @@ class MovieNight:
 
     @workflow.signal
     def say(self, turn: dict):
+        """Queue one user message; a repeated turn ID is ignored."""
         if turn["id"] not in self.ids and not self.closed:
             self.ids.add(turn["id"])
             self.pending.append(turn)
 
     @workflow.signal
     def close(self):
+        """End the movie night after the current turn."""
         self.closed = True
 
     @workflow.signal
     def release(self):
+        """Demo-only: end the offline demo's pause before the plan is saved."""
         self.released = True
 
     @workflow.query
     def view(self) -> dict:
+        """Return tonight's state for manual inspection; the chat doesn't poll it."""
         return self.state
 
     @workflow.update
@@ -110,16 +125,28 @@ class MovieNight:
         return self.state
 
     async def call(self, name: str, data: dict, timeout: int = 30):
+        """Run one Activity by name with the shared timeouts and retry cap.
+
+        The summary is metadata the Temporal Web UI shows beside each step, so a
+        viewer reads plain words instead of only the Activity name. It is not part
+        of the recorded commands, so adding or changing it is replay-safe.
+        """
         return await workflow.execute_activity(
             name,
             data,
             start_to_close_timeout=timedelta(seconds=timeout),
             schedule_to_close_timeout=timedelta(seconds=timeout * 4),
             retry_policy=RETRY,
+            summary=SUMMARIES.get(name, name),
         )
 
     @workflow.run
     async def run(self, config: dict, checkpoint: dict | None = None) -> dict:
+        """Run one movie night: read taste, then answer each turn until done.
+
+        checkpoint is set only after Continue-As-New. It carries the conversation,
+        tonight's decisions, and queued input into the new run.
+        """
         self.can_continue = workflow.patched("nicole-continue-as-new-v1")
         self.state["request_id"] = workflow.info().workflow_id
         self.state["actor"] = config["actor"]

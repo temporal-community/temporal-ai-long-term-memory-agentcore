@@ -32,7 +32,7 @@ def test_default_resume_keeps_local_runtime_and_endnight_terminates(
 ):
     monkeypatch.setenv("NICOLE_STATE_DIR", str(tmp_path))
     state = {
-        "actor": "nyghtowl",
+        "actor": "demo-user",
         "phase": "waiting",
         "messages": [],
         "mode": {
@@ -47,7 +47,7 @@ def test_default_resume_keeps_local_runtime_and_endnight_terminates(
         "address": "localhost:7233",
         "namespace": "default",
     }
-    path = store.handle_path("nyghtowl")
+    path = store.handle_path("demo-user")
     path.write_text(json.dumps(receipt))
     pending = path.with_suffix(".pending.json")
     # No pending turn at resume. Add a receipt just before endnight handles it.

@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>How Nicole runs</title>
+  <desc>The terminal CLI sends each message to the Temporal Service. The MovieNight Workflow's Event History holds the conversation and progress. A Worker, local or on AgentCore Runtime, picks up tasks and runs the Activities, which call the dialogue model, films and screenings, the taste notebook for long-term memory, the saved-plan store, and S3 for large payloads.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1280" height="640" rx="16" fill="#ffffff"/>
+
+  <!-- Terminal CLI -->
+  <rect x="30" y="250" width="210" height="130" rx="12" fill="#f4f1fb" stroke="#6b5bd6" stroke-width="2"/>
+  <text x="135" y="288" text-anchor="middle" font-size="20" font-weight="700" fill="#1f2328">Terminal CLI</text>
+  <text x="135" y="314" text-anchor="middle" font-size="14" fill="#57606a">A Temporal Client.</text>
+  <text x="135" y="334" text-anchor="middle" font-size="14" fill="#57606a">You chat with Nicole here.</text>
+  <text x="135" y="360" text-anchor="middle" font-size="13" fill="#6b5bd6">CONTEXT is built per call</text>
+
+  <!-- CLI <-> Temporal -->
+  <line x1="242" y1="300" x2="300" y2="300" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="300" y1="335" x2="242" y2="335" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="271" y="290" text-anchor="middle" font-size="12" fill="#57606a">message</text>
+  <text x="271" y="356" text-anchor="middle" font-size="12" fill="#57606a">reply</text>
+
+  <!-- Temporal Service -->
+  <rect x="304" y="130" width="300" height="370" rx="14" fill="#eef6ff" stroke="#2f6fd6" stroke-width="2"/>
+  <text x="454" y="166" text-anchor="middle" font-size="20" font-weight="700" fill="#1f2328">Temporal Service</text>
+  <text x="454" y="188" text-anchor="middle" font-size="14" fill="#57606a">Temporal Cloud, or a local dev server</text>
+  <rect x="326" y="210" width="256" height="78" rx="10" fill="#ffffff" stroke="#2f6fd6"/>
+  <text x="454" y="242" text-anchor="middle" font-size="16" font-weight="600" fill="#1f2328">MovieNight Workflow</text>
+  <text x="454" y="266" text-anchor="middle" font-size="13" fill="#57606a">One per movie night</text>
+  <rect x="326" y="302" width="256" height="100" rx="10" fill="#ffffff" stroke="#2f6fd6"/>
+  <text x="454" y="334" text-anchor="middle" font-size="16" font-weight="600" fill="#1f2328">Event History</text>
+  <text x="454" y="358" text-anchor="middle" font-size="13" fill="#57606a">The conversation, tonight's decisions,</text>
+  <text x="454" y="376" text-anchor="middle" font-size="13" fill="#57606a">and each finished step's result</text>
+  <text x="454" y="394" text-anchor="middle" font-size="13" fill="#2f6fd6">STATE</text>
+  <rect x="326" y="416" width="256" height="62" rx="10" fill="#ffffff" stroke="#2f6fd6"/>
+  <text x="454" y="444" text-anchor="middle" font-size="16" font-weight="600" fill="#1f2328">Task Queue</text>
+  <text x="454" y="465" text-anchor="middle" font-size="13" fill="#57606a">Work waits here until a Worker polls</text>
+
+  <!-- Temporal <-> Worker -->
+  <line x1="606" y1="290" x2="664" y2="290" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="664" y1="340" x2="606" y2="340" stroke="#57606a" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="635" y="280" text-anchor="middle" font-size="12" fill="#57606a">tasks</text>
+  <text x="635" y="362" text-anchor="middle" font-size="12" fill="#57606a">results</text>
+
+  <!-- Worker -->
+  <rect x="668" y="110" width="240" height="410" rx="14" fill="#effaf3" stroke="#2e9e5b" stroke-width="2"/>
+  <text x="788" y="146" text-anchor="middle" font-size="20" font-weight="700" fill="#1f2328">Worker</text>
+  <text x="788" y="168" text-anchor="middle" font-size="14" fill="#57606a">Local, or AgentCore Runtime</text>
+  <text x="788" y="190" text-anchor="middle" font-size="13" fill="#2e9e5b">Drains when idle;</text>
+  <text x="788" y="208" text-anchor="middle" font-size="13" fill="#2e9e5b">a new Worker replays</text>
+  <text x="692" y="240" font-size="14" font-weight="600" fill="#1f2328">Activities</text>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" fill="#1f2328">
+    <text x="692" y="272">decide_next</text>
+    <text x="692" y="312">lookup_film</text>
+    <text x="692" y="352">find_showtimes</text>
+    <text x="692" y="392">retrieve_taste</text>
+    <text x="692" y="432">remember_turn</text>
+    <text x="692" y="472">save_tonight</text>
+  </g>
+
+  <!-- External services -->
+  <g font-size="15">
+    <rect x="1040" y="40" width="210" height="76" rx="10" fill="#fff7ec" stroke="#d48a1c" stroke-width="2"/>
+    <text x="1145" y="72" text-anchor="middle" font-weight="600" fill="#1f2328">Dialogue model</text>
+    <text x="1145" y="96" text-anchor="middle" font-size="12" fill="#57606a">Bedrock, Anthropic, or OpenRouter</text>
+
+    <rect x="1040" y="136" width="210" height="76" rx="10" fill="#fff7ec" stroke="#d48a1c" stroke-width="2"/>
+    <text x="1145" y="168" text-anchor="middle" font-weight="600" fill="#1f2328">Films and screenings</text>
+    <text x="1145" y="192" text-anchor="middle" font-size="12" fill="#57606a">OMDb and sample showtimes</text>
+
+    <rect x="1040" y="232" width="210" height="96" rx="10" fill="#f4f1fb" stroke="#6b5bd6" stroke-width="2"/>
+    <text x="1145" y="264" text-anchor="middle" font-weight="600" fill="#1f2328">Taste notebook</text>
+    <text x="1145" y="288" text-anchor="middle" font-size="12" fill="#57606a">AgentCore Memory, or local SQLite</text>
+    <text x="1145" y="312" text-anchor="middle" font-size="12" fill="#6b5bd6">LONG-TERM MEMORY</text>
+
+    <rect x="1040" y="348" width="210" height="76" rx="10" fill="#fff7ec" stroke="#d48a1c" stroke-width="2"/>
+    <text x="1145" y="380" text-anchor="middle" font-weight="600" fill="#1f2328">Saved plans</text>
+    <text x="1145" y="404" text-anchor="middle" font-size="12" fill="#57606a">DynamoDB, or local SQLite</text>
+
+    <rect x="1040" y="444" width="210" height="96" rx="10" fill="#fff7ec" stroke="#d48a1c" stroke-width="2"/>
+    <text x="1145" y="476" text-anchor="middle" font-weight="600" fill="#1f2328">S3</text>
+    <text x="1145" y="500" text-anchor="middle" font-size="12" fill="#57606a">Large payloads; Event History</text>
+    <text x="1145" y="518" text-anchor="middle" font-size="12" fill="#57606a">keeps a reference (claim check)</text>
+  </g>
+
+  <!-- Activities -> services: each line leaves the Worker's right edge at its Activity's row -->
+  <g stroke="#57606a" stroke-width="1.6" fill="none" marker-end="url(#arrow)">
+    <path d="M 910 267 C 975 267, 975 78, 1036 78"/>
+    <path d="M 910 307 C 975 307, 975 166, 1036 166"/>
+    <path d="M 910 347 C 975 347, 975 190, 1036 190"/>
+    <path d="M 910 387 C 975 387, 975 272, 1036 272"/>
+    <path d="M 910 427 C 975 427, 975 298, 1036 298"/>
+    <path d="M 910 467 C 975 467, 975 386, 1036 386"/>
+  </g>
+  <path d="M 910 505 C 975 505, 975 492, 1036 492" stroke="#57606a" stroke-width="1.6" stroke-dasharray="6 5" fill="none" marker-end="url(#arrow)"/>
+
+  <text x="30" y="600" font-size="14" fill="#57606a">The Workflow's progress lives in the Temporal Service, not the Worker, so a new Worker can pick up the same movie night.</text>
+</svg>

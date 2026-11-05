@@ -18,6 +18,7 @@ from nicole.runtime import (
     interact,
     read_handle,
     recover_failed_step,
+    stop_local_worker,
     write_handle,
 )
 from nicole.settings import load_env, state_dir
@@ -40,9 +41,9 @@ def parser():
         "command",
         nargs="?",
         default="chat",
-        choices=["chat", "stage", "resume", "status", "doctor"],
+        choices=["chat", "stage", "resume", "status", "doctor", "failure"],
     )
-    result.add_argument("--user", default="nyghtowl")
+    result.add_argument("--user", default="demo-user")
     result.add_argument(
         "--provider",
         choices=["bedrock", "anthropic", "openrouter"],
@@ -450,6 +451,13 @@ async def dispatch(args, console):
         await stage(args, console)
     elif args.command == "doctor":
         doctor(console)
+    elif args.command == "failure":
+        if stop_local_worker(args.user):
+            console.print("Local Worker stopped. The visit remains in Temporal.")
+        else:
+            console.print(
+                "No matching local Worker is tracked. Resume this visit to start one."
+            )
     elif args.command == "status":
         previous = read_handle(args.user)
         os.environ["TEMPORAL_ADDRESS"] = previous["address"]
