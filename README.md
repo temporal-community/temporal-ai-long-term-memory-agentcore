@@ -17,23 +17,12 @@ night, and lasting taste helps with future recommendations. The walkthrough
 explains how that state and memory become context for each model call, so you
 can use the same approach in your own serverless agent.
 
+![Nicole's terminal. The conversation panel shows the user turning down Moon as too melancholy and choosing The Truman Show. The Taste Notebook panel lists long-term memory: favorite films (Arrival, Interstellar, The Matrix, and Spirited Away) and "Has watched Gattaca," with "No lasting preference added" for tonight's answer. The Tonight's Film panel shows tonight's state: thoughtful, not bleak, under 120 minutes, 3 films checked, The Truman Show selected, Next: save tonight's pick, and WORKER GONE.](assets/nicole-terminal.png)
+
 > [!IMPORTANT]
-> **For Lenny before merge** (from Melanie's review; remove this block once done):
->
-> 1. **Image:** add a screenshot or GIF of the terminal with the state and
->    memory panels right here, under the intro. A short clip from the video works
->    too.
-> 2. **Cost:** replace the estimate in [Cost to run](#cost-to-run) with one
->    measured live movie night: model calls, input and output tokens, dollars,
->    and the date. OpenRouter's activity page lists each request.
-> 3. **Two files:** `examples/legacy_memory.py` (an offline prototype) and
->    `scripts/render_frames.py` (renders presentation fixtures). If readers use
->    them, say what for in the README. If they're only for presenting, move them
->    out of the repo.
-> 4. **Errors:** add the three errors people hit most as a table (You see,
->    Cause, Fix) with exact strings from real runs.
-> 5. **Acknowledgments:** name everyone who reviewed the demo.
-> 6. **Video:** add the link and chapters once it's published.
+> **For Lenny before merge** (from Melanie's review; remove this block once
+> done): replace the estimate in [Cost to run](#cost-to-run) with one measured
+> live movie night: model calls, input and output tokens, dollars, and the date.
 
 **Last verified:** 2026-11-04 (tests and the offline demo). The live AgentCore
 checks weren't re-run; they last passed 2026-10-30.
@@ -231,8 +220,10 @@ manual inspection; the chat does not poll it. Between turns the Workflow waits
 for your next message, then calls Activities for whatever external
 work is needed. It finishes when you save a plan or close the visit.
 
+![How Nicole runs. The terminal CLI sends each message to the Temporal Service and gets the reply back. In the Temporal Service, the MovieNight Workflow's Event History holds the conversation, tonight's decisions, and each finished step's result (state). A Worker, local or on AgentCore Runtime, takes tasks from the Task Queue and runs six Activities: decide_next calls the dialogue model; lookup_film and find_showtimes call film and screening services; retrieve_taste and remember_turn read and write the taste notebook (long-term memory, AgentCore Memory or local SQLite); save_tonight writes saved plans to DynamoDB or SQLite. Large payloads go to S3, and Event History keeps a reference. The Worker drains when idle, and a new Worker replays.](assets/architecture.svg)
+
 <details>
-<summary>Diagram: how the pieces connect</summary>
+<summary>The same diagram in Mermaid</summary>
 
 ```mermaid
 flowchart LR
@@ -552,6 +543,14 @@ S3 payload retrieval, memory extraction and retrieval in a fresh visit, and
 Event History replay. Local tests also cover retry deduplication and Worker loss
 while an Update is in progress.
 
+## If Nicole won't start
+
+| You see | Cause | Fix |
+| --- | --- | --- |
+| `Set NICOLE_MODEL in .env or pass --model.` | The live chat has no model configured. | Set `NICOLE_PROVIDER`, `NICOLE_MODEL`, and that provider's key in `.env` ([Run Nicole locally](#run-nicole-locally)), or run the offline demo with `uv run nicole stage`. |
+| `Deploy Nicole first; no AgentCore deployment file exists` | `uv run nicole` uses the AgentCore runtime by default. | Add `--runtime local`, or deploy with the [deployment guide](docs/CLOUD.md). |
+| `No previous request exists for this user` | `nicole resume` found no open visit for this `--user`. | Start a visit first, or pass the same `--user` you started with (the default is `demo-user`). |
+
 ## What this demo is not
 
 - **Not a booking service.** Nicole doesn't buy tickets, reserve seats, take
@@ -578,6 +577,10 @@ uses a refund agent to examine lost execution progress and effect state. Nicole
 approaches the same questions through a conversation that continues across visits,
 with a long-term memory service and serverless Workers. Together, the demos give
 you two different applications to explore where an agent’s information belongs.
+
+## Acknowledgments
+
+Thanks to Brian, Cornelia, and Melanie for reviewing this demo.
 
 ---
 
