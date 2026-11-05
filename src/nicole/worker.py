@@ -1,5 +1,6 @@
 """Local Worker process. The stage owns and stops only its own subprocess."""
 
+import argparse
 import asyncio
 import os
 from concurrent.futures import ThreadPoolExecutor
@@ -26,4 +27,11 @@ async def run():
 
 
 if __name__ == "__main__":
+    load_env()
+    parser = argparse.ArgumentParser(description="Nicole's local Temporal Worker")
+    parser.add_argument("--task-queue", default=os.getenv("NICOLE_TASK_QUEUE"))
+    args = parser.parse_args()
+    if not args.task_queue:
+        parser.error("Set NICOLE_TASK_QUEUE or pass --task-queue")
+    os.environ["NICOLE_TASK_QUEUE"] = args.task_queue
     asyncio.run(run())

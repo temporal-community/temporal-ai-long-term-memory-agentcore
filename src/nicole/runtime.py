@@ -1,8 +1,10 @@
 """Isolated local processes and reads of durable stage observations."""
 
 import asyncio
+import hashlib
 import json
 import os
+import signal
 import socket
 import subprocess
 import sys
@@ -23,6 +25,47 @@ def available_port() -> int:
         return sock.getsockname()[1]
 
 
+def worker_path(queue: str) -> Path:
+    return (
+        state_dir() / "workers" / (hashlib.sha256(queue.encode()).hexdigest() + ".json")
+    )
+
+
+def stop_local_worker(actor: str) -> bool:
+    """Stop only the process recorded for this profile's saved local visit."""
+    visit = read_handle(actor)
+    if visit.get("runtime", "local") != "local":
+        raise ValueError(
+            "This visit runs on AgentCore; no local Worker will be stopped"
+        )
+    path = worker_path(visit["queue"])
+    if not path.exists():
+        return False
+    recorded = json.loads(path.read_text())
+    pid = recorded["pid"]
+    if not isinstance(pid, int) or isinstance(pid, bool) or pid <= 1:
+        raise ValueError("Invalid Worker receipt; no process was stopped")
+    command = recorded["command"]
+    if command[1:] != ["-m", "nicole.worker", "--task-queue", visit["queue"]]:
+        raise ValueError(
+            "Worker receipt does not match this visit; no process was stopped"
+        )
+    process = subprocess.run(
+        ["ps", "-ww", "-p", str(pid), "-o", "args="],
+        capture_output=True,
+        text=True,
+        timeout=3,
+    )
+    if process.returncode or process.stdout.strip() != " ".join(command):
+        # A dead Worker's PID might now belong to an unrelated process.
+        return False
+    try:
+        os.kill(pid, signal.SIGTERM)
+    except ProcessLookupError:
+        return False
+    return True
+
+
 class LocalRuntime:
     def __init__(self, isolated=False):
         self.isolated = isolated
@@ -30,6 +73,7 @@ class LocalRuntime:
         self.worker = None
         self.logs = []
         self.client = None
+        self.worker_receipt = None
 
     def spawn(self, command: list[str], name: str, env: dict | None = None):
         state_dir().mkdir(parents=True, exist_ok=True)
@@ -99,14 +143,25 @@ class LocalRuntime:
 
     def start_worker(self, queue: str):
         env = dict(os.environ, NICOLE_TASK_QUEUE=queue)
-        self.worker = self.spawn(
-            [sys.executable, "-m", "nicole.worker"], "worker.log", env
-        )
+        command = [sys.executable, "-m", "nicole.worker", "--task-queue", queue]
+        self.worker = self.spawn(command, "worker.log", env)
+        self.worker_receipt = worker_path(queue)
+        self.worker_receipt.parent.mkdir(parents=True, exist_ok=True)
+        temp = self.worker_receipt.with_name(uuid4().hex + ".tmp")
+        temp.write_text(json.dumps({"pid": self.worker.pid, "command": command}))
+        temp.replace(self.worker_receipt)
+
+    def clear_worker_receipt(self):
+        if self.worker_receipt and self.worker_receipt.exists():
+            recorded = json.loads(self.worker_receipt.read_text())
+            if recorded["pid"] == self.worker.pid:
+                self.worker_receipt.unlink(missing_ok=True)
 
     def kill_worker(self):
         if self.worker and self.worker.poll() is None:
             self.worker.kill()
             self.worker.wait(timeout=5)
+        self.clear_worker_receipt()
 
     def close(self):
         for process in (self.worker, self.server):
@@ -117,6 +172,7 @@ class LocalRuntime:
                 except subprocess.TimeoutExpired:
                     process.kill()
                     process.wait(timeout=5)
+        self.clear_worker_receipt()
         for log in self.logs:
             log.close()
 

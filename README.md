@@ -24,7 +24,7 @@ can use the same approach in your own serverless agent.
 > done): replace the estimate in [Cost to run](#cost-to-run) with one measured
 > live movie night: model calls, input and output tokens, dollars, and the date.
 
-**Last verified:** 2026-11-04 (tests and the offline demo). The live AgentCore
+**Last verified:** 2026-11-05 (202 tests and the offline demo). The live AgentCore
 checks weren't re-run; they last passed 2026-10-30.
 
 ## How to run Nicole
@@ -79,16 +79,23 @@ Nicole starts a local Temporal server if needed and stores local data under
 `.demo-state/nicole/`.
 
 **Stop the Worker and pick up again.** While a visit is open, run
-`make failure` (`pkill -f "nicole.worker"`) in a second terminal. That stops the
-local Worker the way serverless compute stops between turns, and the visit's
-Workflow stays open in Temporal with no Worker. Exit the chat (`/detach`), then
-run `make recovery` (`uv run nicole resume`). A new Worker replays Event History
-and returns you to the same conversation without asking tonight's questions
-again. `make reset` deletes the offline demo's runs, prints
-`Offline demo runs removed.`, and keeps your taste notebook, open visits, and
-deployment receipt. Coding agents: see [AGENTS.md](AGENTS.md). See [.env.example](.env.example) for Anthropic, Bedrock,
+`make failure` (`uv run nicole failure`) in a second terminal. It stops only the
+Worker recorded for that profile's saved local visit; the Workflow stays open.
+Exit the chat (`/detach`), then run `make recovery` (`uv run nicole resume`).
+A new Worker returns you to the same conversation without repeating completed
+steps. For another profile, use `make failure NICOLE_USER=alice` and
+`make recovery NICOLE_USER=alice`. `make reset` deletes only offline demo runs,
+keeping your notebook, open visits, and deployment receipt.
+Coding agents: see [AGENTS.md](AGENTS.md). See [.env.example](.env.example) for Anthropic, Bedrock,
 and Temporal Cloud settings. To keep the local Web UI available, run
 `temporal server start-dev` separately and open [localhost:8233](http://localhost:8233).
+
+**Upgrading from the old default user.** The default is now `demo-user`. Existing
+visits and taste recorded under the previous default, `nyghtowl`, stay under that
+identity. Resume with `uv run nicole resume --user nyghtowl`, and start later
+visits with `uv run nicole --user nyghtowl` to keep using that taste notebook.
+For the recovery demo, use `make failure NICOLE_USER=nyghtowl` and
+`make recovery NICOLE_USER=nyghtowl`.
 
 ### Deploy Nicole to AgentCore
 
@@ -519,7 +526,7 @@ for replay compatibility and queue handling.
 ## Verify it
 
 ```sh
-make test                               # ends with "197 passed"
+make test                               # ends with "202 passed"
 make lint                               # "All checks passed!" and "files already formatted"
 uv run nicole stage --auto --width 100  # exits 0 after "A lovely evening."
 ```
@@ -535,13 +542,13 @@ To check your cloud deployment, run the separate
 chargeable service calls to verify actual memory extraction, replacement compute,
 S3 hydration, saved plans, and replay, which the offline tests cannot establish.
 
-Local tests, lint, and formatting passed October 30, 2026 (197 tests), including
-the unattended offline stage. The current code was deployed to AgentCore and
-passed the live cloud checks that day: recommendations, a cinema-to-home switch,
-full-transcript Continue-As-New, saving on a replacement Worker after idle drain,
-S3 payload retrieval, memory extraction and retrieval in a fresh visit, and
-Event History replay. Local tests also cover retry deduplication and Worker loss
-while an Update is in progress.
+Local tests, lint, and formatting passed November 5, 2026 (202 tests), including
+the unattended offline demo and profile-scoped Worker failure and recovery.
+The live cloud checks last passed October 30, before these PR changes:
+recommendations, a cinema-to-home switch, full-transcript Continue-As-New,
+saving on a replacement Worker after idle drain, S3 payload retrieval, memory
+extraction and retrieval in a fresh visit, and Event History replay. Local tests
+also cover retry deduplication and Worker loss while an Update is in progress.
 
 ## If Nicole won't start
 

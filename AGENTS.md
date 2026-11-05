@@ -12,9 +12,9 @@ test, and change the repo.
 | --- | --- | --- |
 | Setup | `make setup` (`uv sync --group dev`) | Exits 0 |
 | Offline demo | `uv run nicole stage --auto --width 100` | Exits 0 after `Remembered taste. Resumed work. A lovely evening.` |
-| Tests | `make test` | Ends with `197 passed` (or more) |
+| Tests | `make test` | Ends with `202 passed` (or more) |
 | Lint | `make lint` | `All checks passed!` and `files already formatted` |
-| Stop the local Worker | `make failure` | The local Worker exits; the visit's Workflow stays open |
+| Stop the local Worker | `make failure` | Only the saved local visit's tracked Worker exits; the Workflow stays open |
 | Pick up again | `make recovery` (`uv run nicole resume`) | The same visit continues on a new Worker |
 | Reset | `make reset` | Deletes `.demo-state/nicole/stage-*` only |
 
