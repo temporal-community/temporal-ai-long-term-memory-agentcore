@@ -5,6 +5,23 @@ import re
 
 import httpx
 
+
+class LookupFailure(RuntimeError):
+    """OMDb diagnostics with the category and HTTP status, but no URL or key."""
+
+    def __init__(self, category, status=None):
+        self.category = category
+        self.status = status
+        hint = (
+            "check OMDB_API_KEY" if category == "auth_error" else "check connectivity"
+        )
+        super().__init__(
+            f"OMDb lookup failed ({category}"
+            + (f", HTTP {status}" if status is not None else "")
+            + f"); {hint}"
+        )
+
+
 FIXTURES = {
     "Gattaca": {
         "title": "Gattaca",
@@ -127,11 +144,19 @@ def lookup(title: str, year: str | None, live: bool) -> dict:
             ):
                 return {"unavailable": True}
             return movie
-    except (httpx.HTTPError, KeyError, TypeError, httpx.DecodingError):
-        # HTTP exception strings contain the URL, including the API key.
-        raise RuntimeError(
-            "OMDb lookup failed; check connectivity and API setup"
-        ) from None
+    # HTTP exception strings contain the URL, including the API key, so each
+    # branch keeps only the category and status code.
+    except httpx.HTTPStatusError as exc:
+        status = exc.response.status_code
+        # OMDb answers an invalid or unactivated key with HTTP 401.
+        category = "auth_error" if status in (401, 403) else "http_error"
+        raise LookupFailure(category, status) from None
+    except httpx.TimeoutException:
+        raise LookupFailure("timeout") from None
+    except (KeyError, TypeError, httpx.DecodingError):
+        raise LookupFailure("invalid_response") from None
+    except httpx.HTTPError:
+        raise LookupFailure("connection_error") from None
 
 
 def same_title(actual: str, requested: str) -> bool:
