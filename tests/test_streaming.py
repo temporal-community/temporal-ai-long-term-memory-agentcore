@@ -109,7 +109,7 @@ def test_activity_ignores_old_streaming_config_and_returns_complete_decision(
         "config": {"stream_dialogue": True},
     }
     if fail:
-        with pytest.raises(Exception, match="operation_error"):
+        with pytest.raises(Exception, match="RuntimeError"):
             activities.decide_next(data)
     else:
         assert activities.decide_next(data)["reply"] == "Darling."

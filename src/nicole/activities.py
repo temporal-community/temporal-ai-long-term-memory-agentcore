@@ -13,10 +13,11 @@ def safe_call(function, *args):
     try:
         return function(*args)
     except Exception as exc:
-        # Provider exception text and URLs may contain credentials. Do not record it.
-        category = "operation_error"
+        # Provider exception text and URLs may contain credentials. Do not record
+        # it. The exception's class name is safe, and says more than a generic label.
+        category = type(exc).__name__
         status = None
-        if isinstance(exc, brain.ProviderFailure):
+        if isinstance(exc, (brain.ProviderFailure, films.LookupFailure)):
             category, status = exc.category, exc.status
         elif isinstance(exc, brain.DecisionValidationError):
             category = exc.code
@@ -35,6 +36,9 @@ def safe_call(function, *args):
             + (f", HTTP {status}" if status is not None else "")
             + "); check service configuration and credentials",
             type="ServiceFailure",
+            # A rejected key fails the same way on every attempt, so don't spend
+            # Temporal's retries on it.
+            non_retryable=status in (401, 403),
         ) from None
 
 
