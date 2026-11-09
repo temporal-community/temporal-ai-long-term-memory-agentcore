@@ -19,13 +19,9 @@ can use the same approach in your own serverless agent.
 
 ![Nicole's terminal. The conversation panel shows the user turning down Moon as too melancholy and choosing The Truman Show. The Taste Notebook panel lists long-term memory: favorite films (Arrival, Interstellar, The Matrix, and Spirited Away) and "Has watched Gattaca," with "No lasting preference added" for tonight's answer. The Tonight's Film panel shows tonight's state: thoughtful, not bleak, under 120 minutes, 3 films checked, The Truman Show selected, Next: save tonight's pick, and WORKER GONE.](assets/nicole-terminal.png)
 
-> [!IMPORTANT]
-> **For Lenny before merge** (from Melanie's review; remove this block once
-> done): replace the estimate in [Cost to run](#cost-to-run) with one measured
-> live movie night: model calls, input and output tokens, dollars, and the date.
-
-**Last verified:** 2026-11-05 (202 tests and the offline demo). The live AgentCore
-checks weren't re-run; they last passed 2026-10-30.
+**Last verified:** 2026-11-09 (206 tests and the offline demo) and 2026-11-04
+(one live movie night on a local Worker with Sonnet 4.6 and OMDb). The live
+AgentCore checks weren't re-run; they last passed 2026-10-30.
 
 ## How to run Nicole
 
@@ -146,32 +142,35 @@ turns that already finished. Only a call that was in flight when a Worker
 stopped can run twice. If the conversation lived only in the process, a stopped
 Worker would mean starting the evening over and paying for those calls again.
 
-**One movie night (estimate):** an eight-turn cinema conversation on Sonnet 4.6
-makes about 10 model calls: about 56,000–60,000 tokens and $0.19–$0.25. With
-Temporal Cloud and AgentCore, the evening comes to about $0.20–$0.26.
+**One movie night (measured):** a seven-turn stay-in evening on Sonnet 4.6,
+from the greeting to a saved pick, made 9 model calls: 39,260 tokens (36,894
+input, 2,366 output) and $0.15. With Temporal Cloud and AgentCore, the evening
+comes to about $0.16.
 
-**At scale (estimate):** 10,000 movie nights a month come to about 560–600
-million tokens and $1,900–$2,500 in model calls, before the other services.
+**At scale:** 10,000 movie nights a month come to about 393 million tokens and
+about $1,460 in model calls, before the other services.
 
-These are planning estimates from the current code, not a measured run: token
-counts use characters divided by four, with 200–600 output tokens assumed per
-call, at prices checked October 30, 2026. The offline demo makes no model calls,
-so it costs 0 tokens and $0.
+Measured on 2026-11-04 with a local Worker, local memory, and live OMDb
+lookups, at Anthropic's Sonnet 4.6 prices ($3 per million input tokens, $15 per
+million output). Two of the model's decisions failed validation and Temporal
+retried them; those retries are in the totals. A cinema evening with screenings
+makes a few more calls. The offline demo makes no model calls, so it costs 0
+tokens and $0.
 
 <details>
-<summary>The estimate by component</summary>
+<summary>The cost by component</summary>
 
-| Component                                                              | Example usage                                                                                                 | Estimated cost  |
+| Component                                                              | Example usage                                                                                                 | Cost            |
 | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------- |
-| [Model](https://openrouter.ai/anthropic/claude-sonnet-4.6)             | About 54,000 input tokens and 2,000–6,000 output tokens across 10 calls                                       | $0.19–$0.25     |
+| [Model](https://openrouter.ai/anthropic/claude-sonnet-4.6)             | Measured: 36,894 input and 2,366 output tokens across 9 calls                                                 | $0.15           |
 | [Temporal Cloud](https://temporal.io/pricing)                          | About 30–40 Actions, with one waiting Update per turn                                                         | $0.0015–$0.002  |
 | [AgentCore Runtime](https://aws.amazon.com/bedrock/agentcore/pricing/) | Eight isolated V1 sessions at about 6.25 session-minutes each, assuming 0.5 GB and 5 vCPU-seconds per session | $0.005          |
 | [AgentCore Memory](https://aws.amazon.com/bedrock/agentcore/pricing/)  | 9 retrieval calls                                                                                             | $0.0045         |
-| **Variable subtotal**                                                  | Before storage, support, and other charges                                                                    | **$0.20–$0.26** |
+| **Variable subtotal**                                                  | Before storage, support, and other charges                                                                    | **About $0.16** |
 
-Opening answers use roughly 3,500–3,700 input tokens each in the offline probe;
-follow-ups after cinema recommendations use around 8,500. Completing intake and
-ranking screenings takes extra model calls.
+In the measured run, each call sent 3,443–5,148 input tokens, growing as the
+conversation got longer. The Temporal Cloud and AgentCore rows are estimates
+from their pricing pages, checked October 30, 2026.
 
 The CLI sends one Workflow Update per turn and waits for its result, without
 polling for status. This example uses 22 Activity executions, 9 Updates (including
